@@ -8,400 +8,247 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --primary: #2d8a7b; --primary-light: #3da899; --primary-dark: #1e6b5f; --secondary: #eb788c; --bg-dark: #1a1a2e; --bg-card: #243447; --text-light: #e8f4f2; --text-muted: #9ab8b0; --success: #4ade80; --warning: #fbbf24; --danger: #ef4444; }
+        :root { --primary: #2d8a7b; --primary-light: #3da899; --primary-dark: #1e6b5f; --secondary: #eb788c; --accent: #7c3aed; --bg-dark: #1a1a2e; --bg-card: #243447; --bg-card-hover: #2d4055; --text-light: #e8f4f2; --text-muted: #9ab8b0; --success: #4ade80; --warning: #fbbf24; --danger: #ef4444; --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
         body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1a3a3a 100%); min-height: 100vh; color: var(--text-light); overflow-x: hidden; }
-        .nav-container { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(26, 26, 46, 0.95); backdrop-filter: blur(10px); padding: 10px 0; z-index: 1000; border-top: 1px solid rgba(45, 138, 123, 0.3); }
+        .nav-container { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(26, 26, 46, 0.98); backdrop-filter: blur(15px); padding: 8px 0 12px; z-index: 1000; border-top: 1px solid rgba(45, 138, 123, 0.3); }
         .nav { display: flex; justify-content: space-around; max-width: 500px; margin: 0 auto; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; padding: 8px 16px; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; color: var(--text-muted); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; padding: 6px 12px; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; color: var(--text-muted); min-width: 60px; }
         .nav-item.active { color: var(--primary-light); background: rgba(45, 138, 123, 0.2); }
-        .nav-icon { font-size: 24px; margin-bottom: 4px; }
-        .nav-label { font-size: 11px; font-weight: 500; }
-        .container { max-width: 500px; margin: 0 auto; padding: 20px 16px 100px; }
-        .header { text-align: center; padding: 20px 0; }
-        .header h1 { font-size: 28px; color: var(--primary-light); margin-bottom: 5px; }
-        .header p { color: var(--text-muted); font-size: 14px; }
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.3s ease; }
+        .nav-item:hover { color: var(--primary-light); transform: translateY(-2px); }
+        .nav-icon { font-size: 22px; margin-bottom: 2px; }
+        .nav-label { font-size: 10px; font-weight: 500; }
+        .container { max-width: 500px; margin: 0 auto; padding: 16px 16px 100px; }
+        .page { display: none; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .card { background: rgba(36, 52, 71, 0.8); border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 1px solid rgba(45, 138, 123, 0.2); }
-        .card-title { font-size: 18px; font-weight: 600; margin-bottom: 12px; color: var(--text-light); }
-        .breathing-container { display: flex; flex-direction: column; align-items: center; padding: 30px 0; }
-        .breathing-circle { width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, var(--primary-light) 0%, var(--primary-dark) 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 60px rgba(45, 138, 123, 0.4); transition: transform 4s ease-in-out; }
-        .breathing-circle.inhale { transform: scale(1.3); }
-        .breathing-circle.hold { transform: scale(1.3); }
-        .breathing-circle.exhale { transform: scale(1); }
-        .breathing-text { color: white; font-size: 24px; font-weight: 600; text-align: center; white-space: pre-line; }
-        .breathing-timer { font-size: 48px; font-weight: 700; margin-top: 20px; color: var(--primary-light); }
-        .breathing-type-selector { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
-        .breathing-type-btn { padding: 10px 20px; border-radius: 25px; border: 2px solid var(--primary); background: transparent; color: var(--text-light); cursor: pointer; transition: all 0.3s ease; font-family: 'Poppins', sans-serif; }
-        .breathing-type-btn.active { background: var(--primary); color: white; }
-        .btn { padding: 14px 32px; border-radius: 30px; border: none; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-family: 'Poppins', sans-serif; }
-        .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; box-shadow: 0 4px 15px rgba(45, 138, 123, 0.4); }
-        .btn-danger { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); color: white; }
-        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary-light); }
-        .controls { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+        .header { text-align: center; padding: 16px 0; }
+        .header-title { font-size: 28px; font-weight: 700; background: linear-gradient(90deg, var(--primary-light), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .header-subtitle { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+        .card { background: var(--bg-card); border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 1px solid rgba(45, 138, 123, 0.2); transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-2px); border-color: rgba(45, 138, 123, 0.4); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); }
+        .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+        .feature-card { background: var(--bg-card); border-radius: 16px; padding: 20px 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; border: 1px solid rgba(45, 138, 123, 0.15); }
+        .feature-card:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 10px 30px rgba(45, 138, 123, 0.2); }
+        .feature-icon { font-size: 36px; margin-bottom: 8px; }
+        .feature-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .feature-desc { font-size: 11px; color: var(--text-muted); }
+        .breathing-circle-container { display: flex; justify-content: center; align-items: center; padding: 30px 0; }
+        .breathing-circle { width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(45, 138, 123, 0.3) 0%, rgba(45, 138, 123, 0.1) 70%); border: 3px solid var(--primary); display: flex; justify-content: center; align-items: center; flex-direction: column; transition: all 0.5s ease; }
+        .breathing-circle.inhale { transform: scale(1.2); background: radial-gradient(circle, rgba(74, 222, 128, 0.4) 0%, rgba(74, 222, 128, 0.1) 70%); border-color: var(--success); }
+        .breathing-circle.hold { background: radial-gradient(circle, rgba(251, 191, 36, 0.4) 0%, rgba(251, 191, 36, 0.1) 70%); border-color: var(--warning); }
+        .breathing-circle.exhale { transform: scale(0.9); background: radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, rgba(239, 68, 68, 0.1) 70%); border-color: var(--danger); }
+        .breathing-text { font-size: 24px; font-weight: 600; }
+        .breathing-count { font-size: 48px; font-weight: 700; margin-top: 8px; }
+        .breathing-controls { display: flex; justify-content: center; gap: 16px; margin-top: 20px; }
+        .btn { padding: 14px 28px; border-radius: 25px; border: none; font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background: var(--gradient-4); color: #1a1a2e; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(67, 233, 123, 0.4); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.1); color: var(--text-light); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .technique-list { display: flex; flex-direction: column; gap: 12px; }
+        .technique-card { background: var(--bg-card); border-radius: 14px; padding: 16px; display: flex; align-items: center; cursor: pointer; transition: all 0.3s ease; border: 1px solid rgba(45, 138, 123, 0.15); }
+        .technique-card:hover, .technique-card.active { background: var(--bg-card-hover); border-color: var(--primary); }
+        .technique-icon { font-size: 28px; margin-right: 14px; }
+        .technique-info { flex: 1; }
+        .technique-name { font-size: 15px; font-weight: 600; }
+        .technique-pattern { font-size: 12px; color: var(--text-muted); }
+        .music-category { margin-bottom: 24px; }
+        .category-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .channel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .channel-card { background: var(--bg-card); border-radius: 14px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s ease; text-decoration: none; color: inherit; border: 1px solid rgba(45, 138, 123, 0.15); }
+        .channel-card:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); }
+        .channel-icon { font-size: 36px; margin-bottom: 8px; }
+        .channel-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+        .channel-desc { font-size: 10px; color: var(--text-muted); }
         .mood-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; }
-        .mood-btn { aspect-ratio: 1; border-radius: 16px; border: 2px solid transparent; background: rgba(45, 138, 123, 0.2); cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; }
-        .mood-btn:hover, .mood-btn.selected { border-color: var(--primary-light); background: rgba(45, 138, 123, 0.4); transform: scale(1.05); }
-        .mood-emoji { font-size: 32px; }
-        .mood-label { font-size: 10px; margin-top: 4px; color: var(--text-muted); }
-        .mood-history { max-height: 200px; overflow-y: auto; }
-        .mood-entry { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(45, 138, 123, 0.2); }
-        .meditation-categories { display: flex; overflow-x: auto; gap: 10px; padding: 10px 0; margin-bottom: 15px; -webkit-overflow-scrolling: touch; }
-        .meditation-categories::-webkit-scrollbar { display: none; }
-        .category-chip { padding: 8px 16px; border-radius: 20px; background: rgba(45, 138, 123, 0.2); color: var(--text-muted); white-space: nowrap; cursor: pointer; transition: all 0.3s ease; font-size: 13px; }
-        .category-chip.active { background: var(--primary); color: white; }
-        .meditation-list { max-height: 400px; overflow-y: auto; }
-        .meditation-item { display: flex; align-items: center; padding: 14px; background: rgba(36, 52, 71, 0.6); border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease; border: 1px solid transparent; }
-        .meditation-item:hover { background: rgba(45, 138, 123, 0.2); border-color: var(--primary); }
-        .meditation-icon { font-size: 36px; margin-right: 14px; }
-        .meditation-info { flex: 1; }
-        .meditation-name { font-weight: 600; font-size: 15px; margin-bottom: 3px; }
-        .meditation-duration { font-size: 12px; color: var(--text-muted); }
-        .meditation-play { width: 44px; height: 44px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
-        .meditation-player { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, #1a1a2e 0%, #0f1419 100%); z-index: 2000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .meditation-player.active { display: flex; animation: fadeIn 0.5s ease; }
-        .player-close { position: absolute; top: 20px; right: 20px; font-size: 28px; color: var(--text-muted); cursor: pointer; }
-        .player-visual { width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, var(--primary) 0%, transparent 70%); animation: pulse 4s ease-in-out infinite; display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
-        .player-title { font-size: 24px; font-weight: 600; margin-bottom: 10px; text-align: center; }
-        .player-timer { font-size: 64px; font-weight: 700; color: var(--primary-light); margin: 20px 0; }
-        .player-progress { width: 100%; max-width: 300px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin: 20px 0; overflow: hidden; }
-        .player-progress-bar { height: 100%; background: var(--primary-light); border-radius: 3px; transition: width 1s linear; }
-        .volume-control { display: flex; align-items: center; gap: 10px; margin-top: 20px; }
-        .volume-slider { width: 120px; accent-color: var(--primary); }
-        .helpline-card { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
-        .helpline-card.primary { background: rgba(45, 138, 123, 0.2); border-color: var(--primary); }
-        .helpline-name { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
-        .helpline-number { font-size: 24px; font-weight: 700; color: var(--primary-light); margin: 8px 0; }
-        .helpline-details { font-size: 12px; color: var(--text-muted); }
-        .helpline-call-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: var(--primary); color: white; border-radius: 25px; text-decoration: none; margin-top: 10px; font-weight: 500; }
-        .search-box { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(45, 138, 123, 0.3); background: rgba(36, 52, 71, 0.6); color: var(--text-light); font-size: 14px; margin-bottom: 15px; font-family: 'Poppins', sans-serif; }
-        .search-box::placeholder { color: var(--text-muted); }
-        .search-box:focus { outline: none; border-color: var(--primary); }
-        .audio-visualizer { display: flex; align-items: flex-end; justify-content: center; height: 60px; gap: 4px; margin: 20px 0; }
-        .visualizer-bar { width: 6px; background: var(--primary-light); border-radius: 3px; animation: visualize 0.5s ease-in-out infinite alternate; }
-        @keyframes visualize { from { height: 10px; } to { height: 50px; } }
-        .sound-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
-        .sound-btn { padding: 12px; border-radius: 12px; background: rgba(36, 52, 71, 0.6); border: 1px solid rgba(45, 138, 123, 0.2); color: var(--text-light); cursor: pointer; transition: all 0.3s ease; text-align: center; }
-        .sound-btn.active { background: var(--primary); border-color: var(--primary); }
-        .sound-icon { font-size: 24px; display: block; margin-bottom: 4px; }
-        .sound-name { font-size: 11px; }
-        .timer-presets { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 15px 0; }
-        .timer-preset { padding: 10px 20px; border-radius: 25px; background: rgba(36, 52, 71, 0.6); border: 1px solid rgba(45, 138, 123, 0.3); color: var(--text-light); cursor: pointer; transition: all 0.3s ease; }
-        .timer-preset.active { background: var(--primary); border-color: var(--primary); }
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 15px 0; }
-        .stat-card { background: rgba(36, 52, 71, 0.6); padding: 16px; border-radius: 12px; text-align: center; }
-        .stat-value { font-size: 28px; font-weight: 700; color: var(--primary-light); }
-        .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-        .emergency-banner { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); padding: 16px; border-radius: 12px; margin-bottom: 16px; text-align: center; }
-        .emergency-banner h3 { margin-bottom: 8px; }
-        .emergency-banner a { color: white; font-size: 24px; font-weight: 700; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+        .mood-btn { background: var(--bg-card); border: 2px solid transparent; border-radius: 14px; padding: 14px 8px; cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; }
+        .mood-btn:hover, .mood-btn.selected { border-color: var(--primary); transform: translateY(-4px); }
+        .mood-btn.selected { background: rgba(45, 138, 123, 0.3); }
+        .mood-emoji { font-size: 28px; margin-bottom: 6px; }
+        .mood-label { font-size: 10px; color: var(--text-muted); }
+        .sos-banner { background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        .sos-title { font-size: 18px; font-weight: 600; color: #ff6b6b; margin-bottom: 8px; }
+        .sos-text { font-size: 13px; color: var(--text-muted); }
+        .helpline-list { display: flex; flex-direction: column; gap: 12px; }
+        .helpline-card { background: var(--bg-card); border-radius: 14px; padding: 16px; display: flex; align-items: center; cursor: pointer; transition: all 0.3s ease; }
+        .helpline-card:hover { background: var(--bg-card-hover); }
+        .helpline-icon { width: 50px; height: 50px; border-radius: 12px; background: rgba(239, 68, 68, 0.2); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-right: 14px; }
+        .helpline-info { flex: 1; }
+        .helpline-name { font-size: 15px; font-weight: 600; }
+        .helpline-number { font-size: 14px; color: var(--primary-light); font-weight: 500; }
+        .helpline-hours { font-size: 11px; color: var(--text-muted); }
+        .call-btn { background: var(--success); color: #1a1a2e; border: none; border-radius: 10px; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .voice-banner { background: linear-gradient(135deg, rgba(124, 58, 237, 0.3) 0%, rgba(139, 92, 246, 0.2) 100%); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 16px; padding: 20px; margin: 20px 0; display: flex; align-items: center; }
+        .voice-icon { font-size: 40px; margin-right: 16px; }
+        .voice-content h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+        .voice-content p { font-size: 12px; color: var(--text-muted); }
+        .section-title { font-size: 18px; font-weight: 600; margin: 24px 0 16px; display: flex; align-items: center; gap: 8px; }
+        .greeting { padding: 10px 0 20px; }
+        .greeting-text { font-size: 22px; font-weight: 600; }
+        .greeting-sub { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+        .search-suggestions { margin-top: 16px; }
+        .suggestion-title { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
+        .suggestion-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        .suggestion-chip { background: rgba(45, 138, 123, 0.2); border-radius: 20px; padding: 8px 14px; font-size: 12px; cursor: pointer; transition: all 0.3s ease; }
+        .suggestion-chip:hover { background: rgba(45, 138, 123, 0.4); }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header"><h1>💚 Bondhu</h1><p>Your Wellness Friend</p></div>
-        <div class="page active" id="page-breathing">
-            <div class="card">
-                <div class="card-title">🌬️ Breathing Exercises</div>
-                <div class="breathing-type-selector">
-                    <button class="breathing-type-btn active" data-type="478">4-7-8 Calm</button>
-                    <button class="breathing-type-btn" data-type="box">Box Breathing</button>
-                    <button class="breathing-type-btn" data-type="energize">Energizing</button>
-                    <button class="breathing-type-btn" data-type="relax">Deep Relax</button>
-                </div>
-                <div class="breathing-container">
-                    <div class="breathing-circle" id="breathingCircle"><span class="breathing-text" id="breathingText">Start</span></div>
-                    <div class="breathing-timer" id="breathingTimer">0:00</div>
-                </div>
-                <div class="controls">
-                    <button class="btn btn-primary" id="startBreathing">▶️ Start</button>
-                    <button class="btn btn-outline" id="stopBreathing" style="display:none">⏹️ Stop</button>
-                </div>
-                <div style="margin-top: 20px; text-align: center;"><p style="color: var(--text-muted); font-size: 13px;">Cycles completed: <span id="cycleCount">0</span></p></div>
-            </div>
-            <div class="card">
-                <div class="card-title">🎵 Background Sound</div>
-                <div class="sound-options">
-                    <div class="sound-btn" data-sound="none"><span class="sound-icon">🔇</span><span class="sound-name">None</span></div>
-                    <div class="sound-btn active" data-sound="rain"><span class="sound-icon">🌧️</span><span class="sound-name">Rain</span></div>
-                    <div class="sound-btn" data-sound="ocean"><span class="sound-icon">🌊</span><span class="sound-name">Ocean</span></div>
-                    <div class="sound-btn" data-sound="forest"><span class="sound-icon">🌲</span><span class="sound-name">Forest</span></div>
-                    <div class="sound-btn" data-sound="wind"><span class="sound-icon">💨</span><span class="sound-name">Wind</span></div>
-                    <div class="sound-btn" data-sound="tibetan"><span class="sound-icon">🔔</span><span class="sound-name">Tibetan</span></div>
-                </div>
-                <div class="volume-control" style="justify-content: center;"><span>🔈</span><input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50"><span>🔊</span></div>
-            </div>
-        </div>
-        <div class="page" id="page-meditation">
-            <div class="card">
-                <div class="card-title">🧘 Meditation Library</div>
-                <input type="text" class="search-box" placeholder="🔍 Search meditations..." id="meditationSearch">
-                <div class="meditation-categories" id="meditationCategories">
-                    <div class="category-chip active" data-category="all">All</div>
-                    <div class="category-chip" data-category="beginner">Beginner</div>
-                    <div class="category-chip" data-category="mindfulness">Mindfulness</div>
-                    <div class="category-chip" data-category="sleep">Sleep</div>
-                    <div class="category-chip" data-category="anxiety">Anxiety</div>
-                    <div class="category-chip" data-category="focus">Focus</div>
-                    <div class="category-chip" data-category="spiritual">Spiritual</div>
-                    <div class="category-chip" data-category="body">Body Scan</div>
-                    <div class="category-chip" data-category="loving">Loving-Kindness</div>
-                    <div class="category-chip" data-category="chakra">Chakra</div>
-                    <div class="category-chip" data-category="mantra">Mantra</div>
-                    <div class="category-chip" data-category="visualization">Visualization</div>
-                </div>
-                <div class="meditation-list" id="meditationList"></div>
-            </div>
-            <div class="card">
-                <div class="card-title">⏱️ Quick Timer</div>
-                <div class="timer-presets">
-                    <button class="timer-preset" data-minutes="3">3 min</button>
-                    <button class="timer-preset" data-minutes="5">5 min</button>
-                    <button class="timer-preset active" data-minutes="10">10 min</button>
-                    <button class="timer-preset" data-minutes="15">15 min</button>
-                    <button class="timer-preset" data-minutes="20">20 min</button>
-                    <button class="timer-preset" data-minutes="30">30 min</button>
-                    <button class="timer-preset" data-minutes="45">45 min</button>
-                    <button class="timer-preset" data-minutes="60">60 min</button>
-                </div>
-                <div class="controls"><button class="btn btn-primary" id="startCustomTimer">🧘 Start Silent Meditation</button></div>
-            </div>
-        </div>
-        <div class="page" id="page-mood">
-            <div class="card">
-                <div class="card-title">😊 How are you feeling?</div>
-                <div class="mood-grid">
-                    <div class="mood-btn" data-mood="1" data-emoji="😢"><span class="mood-emoji">😢</span><span class="mood-label">Very Low</span></div>
-                    <div class="mood-btn" data-mood="2" data-emoji="😔"><span class="mood-emoji">😔</span><span class="mood-label">Low</span></div>
-                    <div class="mood-btn" data-mood="3" data-emoji="😐"><span class="mood-emoji">😐</span><span class="mood-label">Okay</span></div>
-                    <div class="mood-btn" data-mood="4" data-emoji="🙂"><span class="mood-emoji">🙂</span><span class="mood-label">Good</span></div>
-                    <div class="mood-btn" data-mood="5" data-emoji="😊"><span class="mood-emoji">😊</span><span class="mood-label">Great</span></div>
-                    <div class="mood-btn" data-mood="6" data-emoji="😰"><span class="mood-emoji">😰</span><span class="mood-label">Anxious</span></div>
-                    <div class="mood-btn" data-mood="7" data-emoji="😤"><span class="mood-emoji">😤</span><span class="mood-label">Angry</span></div>
-                    <div class="mood-btn" data-mood="8" data-emoji="😴"><span class="mood-emoji">😴</span><span class="mood-label">Tired</span></div>
-                    <div class="mood-btn" data-mood="9" data-emoji="🤗"><span class="mood-emoji">🤗</span><span class="mood-label">Grateful</span></div>
-                    <div class="mood-btn" data-mood="10" data-emoji="🌟"><span class="mood-emoji">🌟</span><span class="mood-label">Amazing</span></div>
-                </div>
-                <textarea class="search-box" id="moodNote" placeholder="Add a note about how you're feeling... (optional)" style="min-height: 80px; resize: none;"></textarea>
-                <div class="controls"><button class="btn btn-primary" id="saveMood">💾 Save Mood</button></div>
-            </div>
-            <div class="card">
-                <div class="card-title">📊 Your Stats</div>
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-value" id="totalSessions">0</div><div class="stat-label">Total Sessions</div></div>
-                    <div class="stat-card"><div class="stat-value" id="totalMinutes">0</div><div class="stat-label">Minutes Meditated</div></div>
-                    <div class="stat-card"><div class="stat-value" id="currentStreak">0</div><div class="stat-label">Day Streak 🔥</div></div>
-                    <div class="stat-card"><div class="stat-value" id="avgMood">-</div><div class="stat-label">Avg Mood</div></div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-title">📅 Recent Mood History</div>
-                <div class="mood-history" id="moodHistory"><p style="color: var(--text-muted); text-align: center; padding: 20px;">No mood entries yet. Start tracking above!</p></div>
-            </div>
-        </div>
-        <div class="page" id="page-crisis">
-            <div class="emergency-banner"><h3>🆘 If you're in crisis, please call:</h3><a href="tel:18005990019">1800-599-0019</a><p style="font-size: 12px; margin-top: 5px;">KIRAN - 24/7 Free Helpline</p></div>
-            <div class="card">
-                <div class="card-title">📞 Crisis Helplines (India)</div>
-                <div class="helpline-card primary"><div class="helpline-name">🏥 KIRAN Mental Health Helpline</div><div class="helpline-number">1800-599-0019</div><div class="helpline-details">24/7 • Toll-Free • Multiple Languages</div><a href="tel:18005990019" class="helpline-call-btn">📞 Call Now</a></div>
-                <div class="helpline-card primary"><div class="helpline-name">💚 Vandrevala Foundation</div><div class="helpline-number">1860-2662-345</div><div class="helpline-details">24/7 • English, Hindi</div><a href="tel:18602662345" class="helpline-call-btn">📞 Call Now</a></div>
-                <div class="helpline-card"><div class="helpline-name">📱 Tele-MANAS</div><div class="helpline-number">14416</div><div class="helpline-details">24/7 • All India • Free</div><a href="tel:14416" class="helpline-call-btn">📞 Call Now</a></div>
-                <div class="helpline-card"><div class="helpline-name">🎓 iCall (TISS)</div><div class="helpline-number">9152987821</div><div class="helpline-details">Mon-Sat 8am-10pm</div><a href="tel:9152987821" class="helpline-call-btn">📞 Call Now</a></div>
-                <div class="helpline-card"><div class="helpline-name">🌸 AASRA</div><div class="helpline-number">9820466726</div><div class="helpline-details">24/7 • Mumbai</div><a href="tel:9820466726" class="helpline-call-btn">📞 Call Now</a></div>
-                <div class="helpline-card"><div class="helpline-name">🏛️ Snehi</div><div class="helpline-number">044-24640050</div><div class="helpline-details">24/7 • Chennai</div><a href="tel:04424640050" class="helpline-call-btn">📞 Call Now</a></div>
-                <div class="helpline-card"><div class="helpline-name">🌺 Lifeline Kolkata</div><div class="helpline-number">033-24637401</div><div class="helpline-details">24/7 • Kolkata</div><a href="tel:03324637401" class="helpline-call-btn">📞 Call Now</a></div>
-                <div class="helpline-card"><div class="helpline-name">🕉️ Connecting Trust</div><div class="helpline-number">9922001122</div><div class="helpline-details">12pm-8pm • Bangalore</div><a href="tel:9922001122" class="helpline-call-btn">📞 Call Now</a></div>
-            </div>
-            <div class="card"><div class="card-title">💬 You're Not Alone</div><p style="color: var(--text-muted); line-height: 1.8;">Whatever you're going through, there are people who care and want to help. Reaching out is a sign of strength, not weakness. These helplines are staffed by trained counselors ready to listen without judgment.</p><p style="color: var(--primary-light); margin-top: 15px; font-style: italic;">"The wound is the place where the Light enters you." — Rumi</p></div>
-        </div>
-    </div>
-    <div class="meditation-player" id="meditationPlayer">
-        <div class="player-close" id="closePlayer">✕</div>
-        <div class="player-visual"><span style="font-size: 64px;" id="playerEmoji">🧘</span></div>
-        <div class="player-title" id="playerTitle">Meditation</div>
-        <div class="audio-visualizer" id="audioVisualizer">
-            <div class="visualizer-bar" style="animation-delay: 0s;"></div>
-            <div class="visualizer-bar" style="animation-delay: 0.1s;"></div>
-            <div class="visualizer-bar" style="animation-delay: 0.2s;"></div>
-            <div class="visualizer-bar" style="animation-delay: 0.3s;"></div>
-            <div class="visualizer-bar" style="animation-delay: 0.4s;"></div>
-            <div class="visualizer-bar" style="animation-delay: 0.5s;"></div>
-            <div class="visualizer-bar" style="animation-delay: 0.6s;"></div>
-            <div class="visualizer-bar" style="animation-delay: 0.7s;"></div>
-            <div class="visualizer-bar" style="animation-delay: 0.8s;"></div>
-        </div>
-        <div class="player-timer" id="playerTimer">10:00</div>
-        <div class="player-progress"><div class="player-progress-bar" id="playerProgress"></div></div>
-        <div class="controls">
-            <button class="btn btn-primary" id="pausePlayer">⏸️ Pause</button>
-            <button class="btn btn-danger" id="endPlayer">⏹️ End</button>
-        </div>
-        <div class="volume-control"><span>🔈</span><input type="range" class="volume-slider" id="playerVolume" min="0" max="100" value="50"><span>🔊</span></div>
-    </div>
-    <div class="nav-container">
+    <nav class="nav-container">
         <div class="nav">
-            <div class="nav-item active" data-page="breathing"><span class="nav-icon">🌬️</span><span class="nav-label">Breathe</span></div>
-            <div class="nav-item" data-page="meditation"><span class="nav-icon">🧘</span><span class="nav-label">Meditate</span></div>
-            <div class="nav-item" data-page="mood"><span class="nav-icon">😊</span><span class="nav-label">Mood</span></div>
-            <div class="nav-item" data-page="crisis"><span class="nav-icon">🆘</span><span class="nav-label">Help</span></div>
+            <div class="nav-item active" data-page="home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
+            <div class="nav-item" data-page="breathe"><span class="nav-icon">🌬️</span><span class="nav-label">Breathe</span></div>
+            <div class="nav-item" data-page="meditate"><span class="nav-icon">🧘</span><span class="nav-label">Meditate</span></div>
+            <div class="nav-item" data-page="music"><span class="nav-icon">🎵</span><span class="nav-label">Music</span></div>
+            <div class="nav-item" data-page="sos"><span class="nav-icon">🆘</span><span class="nav-label">SOS</span></div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- HOME PAGE -->
+        <div class="page active" id="home">
+            <div class="header"><h1 class="header-title">Bondhu 💚</h1><p class="header-subtitle">Your Wellness Friend</p></div>
+            <div class="greeting"><p class="greeting-text">Hello, Friend! 🙏</p><p class="greeting-sub">How are you feeling today?</p></div>
+            <div class="mood-grid">
+                <div class="mood-btn" data-mood="great"><span class="mood-emoji">😊</span><span class="mood-label">Great</span></div>
+                <div class="mood-btn" data-mood="good"><span class="mood-emoji">🙂</span><span class="mood-label">Good</span></div>
+                <div class="mood-btn" data-mood="okay"><span class="mood-emoji">😐</span><span class="mood-label">Okay</span></div>
+                <div class="mood-btn" data-mood="low"><span class="mood-emoji">😔</span><span class="mood-label">Low</span></div>
+                <div class="mood-btn" data-mood="struggling"><span class="mood-emoji">😢</span><span class="mood-label">Hard</span></div>
+            </div>
+            <div class="voice-banner"><span class="voice-icon">🎤</span><div class="voice-content"><h3>Voice Messages Enabled!</h3><p>Just speak to Bondhu in the chat - I'll understand and respond.</p></div></div>
+            <div class="feature-grid">
+                <div class="feature-card" data-page="breathe"><span class="feature-icon">🌬️</span><div class="feature-title">Breathing</div><div class="feature-desc">Guided exercises</div></div>
+                <div class="feature-card" data-page="meditate"><span class="feature-icon">🧘</span><div class="feature-title">Meditation</div><div class="feature-desc">Video guides</div></div>
+                <div class="feature-card" data-page="music"><span class="feature-icon">🎵</span><div class="feature-title">Music</div><div class="feature-desc">Relaxing sounds</div></div>
+                <div class="feature-card" onclick="openChat()"><span class="feature-icon">💬</span><div class="feature-title">Chat</div><div class="feature-desc">Talk to Bondhu</div></div>
+            </div>
+            <div class="section-title">💡 Daily Wellness Tip</div>
+            <div class="card"><p id="daily-tip" style="font-size: 14px; line-height: 1.6;">Take three deep breaths right now. Inhale peace, exhale tension. 🙏</p></div>
+        </div>
+
+        <!-- BREATHE PAGE -->
+        <div class="page" id="breathe">
+            <div class="header"><h1 class="header-title">🌬️ Breathing</h1><p class="header-subtitle">Calm your mind with guided breathing</p></div>
+            <div class="breathing-circle-container"><div class="breathing-circle" id="breathingCircle"><span class="breathing-text" id="breathingText">Ready</span><span class="breathing-count" id="breathingCount">-</span></div></div>
+            <div class="breathing-controls">
+                <button class="btn btn-primary" id="startBreathing" onclick="startBreathingExercise()">▶️ Start</button>
+                <button class="btn btn-secondary" id="stopBreathing" onclick="stopBreathingExercise()" style="display: none;">⏹️ Stop</button>
+            </div>
+            <div class="section-title">Choose Technique</div>
+            <div class="technique-list">
+                <div class="technique-card active" data-technique="478" onclick="selectTechnique(this)"><span class="technique-icon">😴</span><div class="technique-info"><div class="technique-name">4-7-8 Relaxing Breath</div><div class="technique-pattern">Inhale 4s → Hold 7s → Exhale 8s</div></div></div>
+                <div class="technique-card" data-technique="box" onclick="selectTechnique(this)"><span class="technique-icon">📦</span><div class="technique-info"><div class="technique-name">Box Breathing</div><div class="technique-pattern">Inhale 4s → Hold 4s → Exhale 4s → Hold 4s</div></div></div>
+                <div class="technique-card" data-technique="anulom" onclick="selectTechnique(this)"><span class="technique-icon">🕉️</span><div class="technique-info"><div class="technique-name">Anulom Vilom</div><div class="technique-pattern">Alternate nostril breathing</div></div></div>
+                <div class="technique-card" data-technique="belly" onclick="selectTechnique(this)"><span class="technique-icon">🫁</span><div class="technique-info"><div class="technique-name">Belly Breathing</div><div class="technique-pattern">Deep diaphragmatic breathing</div></div></div>
+            </div>
+            <div class="search-suggestions"><div class="suggestion-title">🔍 Search on YouTube:</div><div class="suggestion-chips">
+                <span class="suggestion-chip" onclick="searchYouTube('4-7-8 breathing exercise guided')">4-7-8 guided</span>
+                <span class="suggestion-chip" onclick="searchYouTube('box breathing 5 minutes')">Box breathing</span>
+                <span class="suggestion-chip" onclick="searchYouTube('pranayama for beginners')">Pranayama</span>
+                <span class="suggestion-chip" onclick="searchYouTube('breathing for anxiety')">Anxiety relief</span>
+            </div></div>
+        </div>
+
+        <!-- MEDITATE PAGE -->
+        <div class="page" id="meditate">
+            <div class="header"><h1 class="header-title">🧘 Meditation</h1><p class="header-subtitle">Guided meditation channels</p></div>
+            <div class="section-title">🎯 Beginner Friendly</div>
+            <div class="channel-grid">
+                <a href="https://youtube.com/@Headspace" target="_blank" class="channel-card"><span class="channel-icon">🎨</span><div class="channel-name">Headspace</div><div class="channel-desc">Animated & easy</div></a>
+                <a href="https://youtube.com/@TheMindfulMovement" target="_blank" class="channel-card"><span class="channel-icon">🌿</span><div class="channel-name">Mindful Movement</div><div class="channel-desc">Sara & Les</div></a>
+            </div>
+            <div class="section-title">😴 For Sleep</div>
+            <div class="channel-grid">
+                <a href="https://youtube.com/@JasonStephensonMeditation" target="_blank" class="channel-card"><span class="channel-icon">🌙</span><div class="channel-name">Jason Stephenson</div><div class="channel-desc">Sleep meditation</div></a>
+                <a href="https://youtube.com/@MichaelSealey" target="_blank" class="channel-card"><span class="channel-icon">💫</span><div class="channel-name">Michael Sealey</div><div class="channel-desc">Hypnosis & calm</div></a>
+            </div>
+            <div class="section-title">🕉️ Spiritual & Deep</div>
+            <div class="channel-grid">
+                <a href="https://youtube.com/@TaraBrach-meditation" target="_blank" class="channel-card"><span class="channel-icon">🙏</span><div class="channel-name">Tara Brach</div><div class="channel-desc">Warm & wise</div></a>
+                <a href="https://youtube.com/@GreatMeditation" target="_blank" class="channel-card"><span class="channel-icon">☯️</span><div class="channel-name">Great Meditation</div><div class="channel-desc">Various styles</div></a>
+            </div>
+            <div class="search-suggestions"><div class="suggestion-title">🔍 Search on YouTube:</div><div class="suggestion-chips">
+                <span class="suggestion-chip" onclick="searchYouTube('guided meditation for anxiety 10 minutes')">Anxiety 10min</span>
+                <span class="suggestion-chip" onclick="searchYouTube('body scan meditation guided')">Body scan</span>
+                <span class="suggestion-chip" onclick="searchYouTube('morning meditation 5 minutes')">Morning 5min</span>
+                <span class="suggestion-chip" onclick="searchYouTube('sleep meditation 1 hour')">Sleep 1hr</span>
+            </div></div>
+        </div>
+
+        <!-- MUSIC PAGE -->
+        <div class="page" id="music">
+            <div class="header"><h1 class="header-title">🎵 Music</h1><p class="header-subtitle">Relaxation & meditation music</p></div>
+            <div class="music-category">
+                <div class="category-title">🕉️ Mantras & Chants</div>
+                <div class="channel-grid">
+                    <a href="https://youtube.com/@TheMeditativeMind" target="_blank" class="channel-card"><span class="channel-icon">🕉️</span><div class="channel-name">Meditative Mind</div><div class="channel-desc">Mantras & chants</div></a>
+                    <div class="channel-card" onclick="searchYouTube('Om chanting 108 times')"><span class="channel-icon">🔔</span><div class="channel-name">Om Chanting</div><div class="channel-desc">108 times</div></div>
+                </div>
+                <div class="suggestion-chips" style="margin-top: 12px;">
+                    <span class="suggestion-chip" onclick="searchYouTube('Gayatri mantra 108')">Gayatri Mantra</span>
+                    <span class="suggestion-chip" onclick="searchYouTube('Mahamrityunjaya mantra')">Mahamrityunjaya</span>
+                    <span class="suggestion-chip" onclick="searchYouTube('Hanuman chalisa')">Hanuman Chalisa</span>
+                </div>
+            </div>
+            <div class="music-category">
+                <div class="category-title">🎼 Ambient & Instrumental</div>
+                <div class="channel-grid">
+                    <a href="https://youtube.com/@YellowBrickCinema" target="_blank" class="channel-card"><span class="channel-icon">🎹</span><div class="channel-name">Yellow Brick Cinema</div><div class="channel-desc">Study & relax</div></a>
+                    <a href="https://youtube.com/@SoothingRelaxation" target="_blank" class="channel-card"><span class="channel-icon">🎻</span><div class="channel-name">Soothing Relaxation</div><div class="channel-desc">Beautiful piano</div></a>
+                </div>
+                <div class="suggestion-chips" style="margin-top: 12px;">
+                    <span class="suggestion-chip" onclick="searchYouTube('432Hz healing music')">432Hz Healing</span>
+                    <span class="suggestion-chip" onclick="searchYouTube('Tibetan singing bowls meditation')">Singing Bowls</span>
+                    <span class="suggestion-chip" onclick="searchYouTube('Lo-fi beats relaxing')">Lo-fi Beats</span>
+                </div>
+            </div>
+            <div class="music-category">
+                <div class="category-title">🌿 Nature Sounds</div>
+                <div class="suggestion-chips">
+                    <span class="suggestion-chip" onclick="searchYouTube('Rain sounds for sleep 10 hours')">🌧️ Rain Sounds</span>
+                    <span class="suggestion-chip" onclick="searchYouTube('Ocean waves meditation')">🌊 Ocean Waves</span>
+                    <span class="suggestion-chip" onclick="searchYouTube('Forest sounds birds')">🌲 Forest Birds</span>
+                    <span class="suggestion-chip" onclick="searchYouTube('Thunderstorm sounds sleep')">⛈️ Thunderstorm</span>
+                    <span class="suggestion-chip" onclick="searchYouTube('River stream sounds')">🏞️ River Stream</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOS PAGE -->
+        <div class="page" id="sos">
+            <div class="header"><h1 class="header-title">🆘 Crisis Support</h1><p class="header-subtitle">You are not alone</p></div>
+            <div class="sos-banner"><div class="sos-title">💚 You Matter</div><div class="sos-text">If you're in emotional distress, please reach out. Help is available 24/7.</div></div>
+            <div class="helpline-list">
+                <div class="helpline-card" onclick="makeCall('18005990019')"><div class="helpline-icon">📞</div><div class="helpline-info"><div class="helpline-name">KIRAN Mental Health</div><div class="helpline-number">1800-599-0019</div><div class="helpline-hours">24/7 • Free • Government</div></div><button class="call-btn">Call</button></div>
+                <div class="helpline-card" onclick="makeCall('18602662345')"><div class="helpline-icon">💚</div><div class="helpline-info"><div class="helpline-name">Vandrevala Foundation</div><div class="helpline-number">1860-266-2345</div><div class="helpline-hours">24/7 • Multilingual</div></div><button class="call-btn">Call</button></div>
+                <div class="helpline-card" onclick="makeCall('02225521111')"><div class="helpline-icon">🤝</div><div class="helpline-info"><div class="helpline-name">iCall</div><div class="helpline-number">022-2552-1111</div><div class="helpline-hours">Mon-Sat • 8am-10pm</div></div><button class="call-btn">Call</button></div>
+                <div class="helpline-card" onclick="makeCall('9152987821')"><div class="helpline-icon">💜</div><div class="helpline-info"><div class="helpline-name">AASRA</div><div class="helpline-number">9152987821</div><div class="helpline-hours">24/7</div></div><button class="call-btn">Call</button></div>
+            </div>
+            <div class="card" style="margin-top: 20px; text-align: center;"><p style="font-size: 14px; margin-bottom: 12px;">You can also talk to me anytime</p><button class="btn btn-primary" onclick="openChat()">💬 Chat with Bondhu</button></div>
         </div>
     </div>
+
     <script>
-        const meditations = [
-            { id: 1, name: "First Breath Awareness", category: "beginner", duration: 5, icon: "🌱", sound: "rain" },
-            { id: 2, name: "Simple Presence", category: "beginner", duration: 5, icon: "🌿", sound: "forest" },
-            { id: 3, name: "Counting Breaths", category: "beginner", duration: 5, icon: "🔢", sound: "rain" },
-            { id: 4, name: "Body Relaxation Intro", category: "beginner", duration: 7, icon: "😌", sound: "ocean" },
-            { id: 5, name: "Mindful Moment", category: "beginner", duration: 3, icon: "⏰", sound: "tibetan" },
-            { id: 6, name: "Grounding Basics", category: "beginner", duration: 5, icon: "🌍", sound: "forest" },
-            { id: 7, name: "Open Awareness", category: "beginner", duration: 8, icon: "👁️", sound: "wind" },
-            { id: 8, name: "Settling the Mind", category: "beginner", duration: 10, icon: "🧠", sound: "rain" },
-            { id: 9, name: "Present Moment Awareness", category: "mindfulness", duration: 10, icon: "🎯", sound: "forest" },
-            { id: 10, name: "Mindful Observation", category: "mindfulness", duration: 15, icon: "👀", sound: "rain" },
-            { id: 11, name: "Noting Practice", category: "mindfulness", duration: 10, icon: "📝", sound: "wind" },
-            { id: 12, name: "RAIN Meditation", category: "mindfulness", duration: 15, icon: "🌧️", sound: "rain" },
-            { id: 13, name: "Non-Judgmental Awareness", category: "mindfulness", duration: 12, icon: "⚖️", sound: "tibetan" },
-            { id: 14, name: "Beginner's Mind", category: "mindfulness", duration: 10, icon: "🌟", sound: "ocean" },
-            { id: 15, name: "Mindful Walking", category: "mindfulness", duration: 15, icon: "🚶", sound: "forest" },
-            { id: 16, name: "Mindful Eating Prep", category: "mindfulness", duration: 8, icon: "🍽️", sound: "tibetan" },
-            { id: 17, name: "Thought Watching", category: "mindfulness", duration: 12, icon: "💭", sound: "wind" },
-            { id: 18, name: "Sensation Awareness", category: "mindfulness", duration: 10, icon: "✋", sound: "rain" },
-            { id: 19, name: "Deep Sleep Journey", category: "sleep", duration: 30, icon: "🌙", sound: "ocean" },
-            { id: 20, name: "Sleep Body Scan", category: "sleep", duration: 20, icon: "😴", sound: "rain" },
-            { id: 21, name: "Letting Go of the Day", category: "sleep", duration: 15, icon: "🌅", sound: "wind" },
-            { id: 22, name: "Peaceful Slumber", category: "sleep", duration: 25, icon: "💤", sound: "ocean" },
-            { id: 23, name: "Starlight Relaxation", category: "sleep", duration: 20, icon: "⭐", sound: "wind" },
-            { id: 24, name: "Night Sky Visualization", category: "sleep", duration: 15, icon: "🌌", sound: "rain" },
-            { id: 25, name: "Dream Preparation", category: "sleep", duration: 18, icon: "🌠", sound: "ocean" },
-            { id: 26, name: "Bedtime Gratitude", category: "sleep", duration: 10, icon: "🙏", sound: "tibetan" },
-            { id: 27, name: "Moonlight Meditation", category: "sleep", duration: 20, icon: "🌕", sound: "wind" },
-            { id: 28, name: "Rest & Restore", category: "sleep", duration: 25, icon: "🛏️", sound: "rain" },
-            { id: 29, name: "Calm the Storm", category: "anxiety", duration: 10, icon: "⛈️", sound: "rain" },
-            { id: 30, name: "5-4-3-2-1 Grounding", category: "anxiety", duration: 8, icon: "🖐️", sound: "forest" },
-            { id: 31, name: "Safe Space Visualization", category: "anxiety", duration: 12, icon: "🏡", sound: "ocean" },
-            { id: 32, name: "Releasing Worry", category: "anxiety", duration: 15, icon: "🎈", sound: "wind" },
-            { id: 33, name: "Anxiety Release", category: "anxiety", duration: 12, icon: "😮‍💨", sound: "rain" },
-            { id: 34, name: "Finding Stillness", category: "anxiety", duration: 10, icon: "🌊", sound: "ocean" },
-            { id: 35, name: "Gentle Self-Compassion", category: "anxiety", duration: 15, icon: "💕", sound: "tibetan" },
-            { id: 36, name: "Panic Relief", category: "anxiety", duration: 5, icon: "🆘", sound: "rain" },
-            { id: 37, name: "Nervous System Reset", category: "anxiety", duration: 12, icon: "🔄", sound: "forest" },
-            { id: 38, name: "Inner Calm", category: "anxiety", duration: 10, icon: "☮️", sound: "wind" },
-            { id: 39, name: "Laser Focus", category: "focus", duration: 15, icon: "🎯", sound: "rain" },
-            { id: 40, name: "Clarity of Mind", category: "focus", duration: 10, icon: "💎", sound: "tibetan" },
-            { id: 41, name: "Deep Concentration", category: "focus", duration: 20, icon: "🔬", sound: "wind" },
-            { id: 42, name: "Single Point Focus", category: "focus", duration: 12, icon: "⚫", sound: "rain" },
-            { id: 43, name: "Mental Sharpness", category: "focus", duration: 10, icon: "🧠", sound: "tibetan" },
-            { id: 44, name: "Flow State Prep", category: "focus", duration: 15, icon: "🌊", sound: "ocean" },
-            { id: 45, name: "Work Productivity", category: "focus", duration: 10, icon: "💼", sound: "rain" },
-            { id: 46, name: "Study Session Prep", category: "focus", duration: 8, icon: "📚", sound: "forest" },
-            { id: 47, name: "Creative Focus", category: "focus", duration: 12, icon: "🎨", sound: "wind" },
-            { id: 48, name: "Divine Connection", category: "spiritual", duration: 20, icon: "✨", sound: "tibetan" },
-            { id: 49, name: "Higher Self Meeting", category: "spiritual", duration: 25, icon: "👼", sound: "tibetan" },
-            { id: 50, name: "Om Meditation", category: "spiritual", duration: 15, icon: "🕉️", sound: "tibetan" },
-            { id: 51, name: "Inner Light Awareness", category: "spiritual", duration: 18, icon: "💫", sound: "tibetan" },
-            { id: 52, name: "Soul Journey", category: "spiritual", duration: 30, icon: "🌌", sound: "wind" },
-            { id: 53, name: "Gratitude to the Divine", category: "spiritual", duration: 12, icon: "🙏", sound: "tibetan" },
-            { id: 54, name: "Universal Love", category: "spiritual", duration: 20, icon: "💗", sound: "ocean" },
-            { id: 55, name: "Sacred Silence", category: "spiritual", duration: 15, icon: "🤫", sound: "tibetan" },
-            { id: 56, name: "Bhakti Devotion", category: "spiritual", duration: 20, icon: "❤️", sound: "tibetan" },
-            { id: 57, name: "Sufi Heart Opening", category: "spiritual", duration: 18, icon: "💚", sound: "wind" },
-            { id: 58, name: "Full Body Scan", category: "body", duration: 20, icon: "🧍", sound: "ocean" },
-            { id: 59, name: "Progressive Relaxation", category: "body", duration: 15, icon: "😌", sound: "rain" },
-            { id: 60, name: "Head to Toe Release", category: "body", duration: 18, icon: "👣", sound: "forest" },
-            { id: 61, name: "Tension Melting", category: "body", duration: 12, icon: "🫠", sound: "ocean" },
-            { id: 62, name: "Body Awareness", category: "body", duration: 15, icon: "✋", sound: "wind" },
-            { id: 63, name: "Healing Body Scan", category: "body", duration: 20, icon: "💚", sound: "tibetan" },
-            { id: 64, name: "Quick Body Check-in", category: "body", duration: 5, icon: "⚡", sound: "rain" },
-            { id: 65, name: "Yoga Nidra Light", category: "body", duration: 25, icon: "🧘", sound: "ocean" },
-            { id: 66, name: "Metta Meditation", category: "loving", duration: 15, icon: "💕", sound: "tibetan" },
-            { id: 67, name: "Self-Love Practice", category: "loving", duration: 12, icon: "🤗", sound: "ocean" },
-            { id: 68, name: "Compassion for Others", category: "loving", duration: 15, icon: "🌸", sound: "tibetan" },
-            { id: 69, name: "Forgiveness Meditation", category: "loving", duration: 18, icon: "🕊️", sound: "wind" },
-            { id: 70, name: "Heart Opening", category: "loving", duration: 12, icon: "💗", sound: "tibetan" },
-            { id: 71, name: "Sending Love", category: "loving", duration: 10, icon: "💌", sound: "ocean" },
-            { id: 72, name: "Karuna (Compassion)", category: "loving", duration: 15, icon: "🙏", sound: "tibetan" },
-            { id: 73, name: "Tonglen Practice", category: "loving", duration: 20, icon: "🌬️", sound: "wind" },
-            { id: 74, name: "Self-Acceptance", category: "loving", duration: 12, icon: "💛", sound: "rain" },
-            { id: 75, name: "Radiating Kindness", category: "loving", duration: 15, icon: "☀️", sound: "tibetan" },
-            { id: 76, name: "Root Chakra Grounding", category: "chakra", duration: 12, icon: "🔴", sound: "tibetan" },
-            { id: 77, name: "Sacral Chakra Flow", category: "chakra", duration: 12, icon: "🟠", sound: "ocean" },
-            { id: 78, name: "Solar Plexus Power", category: "chakra", duration: 12, icon: "🟡", sound: "tibetan" },
-            { id: 79, name: "Heart Chakra Opening", category: "chakra", duration: 15, icon: "💚", sound: "tibetan" },
-            { id: 80, name: "Throat Chakra Voice", category: "chakra", duration: 12, icon: "🔵", sound: "wind" },
-            { id: 81, name: "Third Eye Awakening", category: "chakra", duration: 15, icon: "🟣", sound: "tibetan" },
-            { id: 82, name: "Crown Chakra Connection", category: "chakra", duration: 15, icon: "⚪", sound: "tibetan" },
-            { id: 83, name: "Full Chakra Balance", category: "chakra", duration: 30, icon: "🌈", sound: "tibetan" },
-            { id: 84, name: "Chakra Cleansing", category: "chakra", duration: 20, icon: "✨", sound: "tibetan" },
-            { id: 85, name: "Kundalini Rising", category: "chakra", duration: 25, icon: "🐍", sound: "tibetan" },
-            { id: 86, name: "Om Chanting", category: "mantra", duration: 15, icon: "🕉️", sound: "tibetan" },
-            { id: 87, name: "So Hum Breath", category: "mantra", duration: 12, icon: "💨", sound: "wind" },
-            { id: 88, name: "Gayatri Mantra", category: "mantra", duration: 18, icon: "☀️", sound: "tibetan" },
-            { id: 89, name: "Om Mani Padme Hum", category: "mantra", duration: 15, icon: "💎", sound: "tibetan" },
-            { id: 90, name: "Lokah Samastah", category: "mantra", duration: 12, icon: "🌍", sound: "tibetan" },
-            { id: 91, name: "Om Namah Shivaya", category: "mantra", duration: 15, icon: "🔱", sound: "tibetan" },
-            { id: 92, name: "Sat Nam", category: "mantra", duration: 12, icon: "✨", sound: "tibetan" },
-            { id: 93, name: "Mool Mantar", category: "mantra", duration: 15, icon: "☬", sound: "tibetan" },
-            { id: 94, name: "Allah Hu", category: "mantra", duration: 15, icon: "☪️", sound: "wind" },
-            { id: 95, name: "Hare Krishna", category: "mantra", duration: 15, icon: "🙏", sound: "tibetan" },
-            { id: 96, name: "Mountain Visualization", category: "visualization", duration: 15, icon: "🏔️", sound: "wind" },
-            { id: 97, name: "Ocean of Calm", category: "visualization", duration: 12, icon: "🌊", sound: "ocean" },
-            { id: 98, name: "Forest Walk", category: "visualization", duration: 18, icon: "🌲", sound: "forest" },
-            { id: 99, name: "Golden Light Healing", category: "visualization", duration: 15, icon: "✨", sound: "tibetan" },
-            { id: 100, name: "Peaceful Garden", category: "visualization", duration: 12, icon: "🌺", sound: "forest" },
-            { id: 101, name: "Cloud Floating", category: "visualization", duration: 10, icon: "☁️", sound: "wind" },
-            { id: 102, name: "River of Peace", category: "visualization", duration: 15, icon: "🏞️", sound: "ocean" },
-            { id: 103, name: "Temple Sanctuary", category: "visualization", duration: 18, icon: "🛕", sound: "tibetan" },
-            { id: 104, name: "Aurora Borealis", category: "visualization", duration: 12, icon: "🌌", sound: "wind" },
-            { id: 105, name: "Beach Sunset", category: "visualization", duration: 15, icon: "🌅", sound: "ocean" },
-            { id: 106, name: "Lotus Blooming", category: "visualization", duration: 12, icon: "🪷", sound: "tibetan" },
-            { id: 107, name: "Rainbow Light", category: "visualization", duration: 10, icon: "🌈", sound: "tibetan" },
-            { id: 108, name: "Sacred Fire", category: "visualization", duration: 15, icon: "🔥", sound: "wind" },
-        ];
-        let audioContext = null, gainNode = null, noiseNode = null;
-        function initAudio() { if (!audioContext) { audioContext = new (window.AudioContext || window.webkitAudioContext)(); gainNode = audioContext.createGain(); gainNode.connect(audioContext.destination); gainNode.gain.value = 0.5; } }
-        function createNoise(type) { initAudio(); stopCurrentSound(); if (type === 'none') return; const bufferSize = 2 * audioContext.sampleRate; const noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate); const output = noiseBuffer.getChannelData(0); for (let i = 0; i < bufferSize; i++) { if (type === 'rain' || type === 'ocean') output[i] = (Math.random() * 2 - 1) * 0.5; else if (type === 'wind') output[i] = (Math.random() * 2 - 1) * 0.3; else if (type === 'forest') output[i] = (Math.random() * 2 - 1) * 0.2; else if (type === 'tibetan') output[i] = Math.sin(i * 0.001) * 0.3 + (Math.random() * 2 - 1) * 0.1; else output[i] = (Math.random() * 2 - 1) * 0.3; } noiseNode = audioContext.createBufferSource(); noiseNode.buffer = noiseBuffer; noiseNode.loop = true; const filter = audioContext.createBiquadFilter(); if (type === 'rain') { filter.type = 'lowpass'; filter.frequency.value = 800; } else if (type === 'ocean') { filter.type = 'lowpass'; filter.frequency.value = 400; } else if (type === 'wind') { filter.type = 'bandpass'; filter.frequency.value = 500; filter.Q.value = 0.5; } else if (type === 'forest') { filter.type = 'highpass'; filter.frequency.value = 200; } else if (type === 'tibetan') { filter.type = 'lowpass'; filter.frequency.value = 300; } noiseNode.connect(filter); filter.connect(gainNode); noiseNode.start(); }
-        function stopCurrentSound() { if (noiseNode) { noiseNode.stop(); noiseNode.disconnect(); noiseNode = null; } }
-        function setVolume(value) { if (gainNode) gainNode.gain.value = value / 100; }
-        const breathingPatterns = { '478': { inhale: 4, hold: 7, exhale: 8 }, 'box': { inhale: 4, hold: 4, exhale: 4, holdAfter: 4 }, 'energize': { inhale: 2, exhale: 2 }, 'relax': { inhale: 5, hold: 2, exhale: 8 } };
-        let breathingInterval = null, currentPattern = '478', breathingPhase = 'ready', phaseTime = 0, totalTime = 0, cycleCount = 0;
-        function startBreathing() { initAudio(); const pattern = breathingPatterns[currentPattern]; const circle = document.getElementById('breathingCircle'); const text = document.getElementById('breathingText'); const timer = document.getElementById('breathingTimer'); const selectedSound = document.querySelector('.sound-btn.active'); if (selectedSound) createNoise(selectedSound.dataset.sound); document.getElementById('startBreathing').style.display = 'none'; document.getElementById('stopBreathing').style.display = 'inline-block'; breathingPhase = 'inhale'; phaseTime = pattern.inhale; totalTime = 0; breathingInterval = setInterval(() => { totalTime++; phaseTime--; timer.textContent = formatTime(totalTime); if (phaseTime <= 0) { if (breathingPhase === 'inhale') { if (pattern.hold) { breathingPhase = 'hold'; phaseTime = pattern.hold; circle.className = 'breathing-circle hold'; text.textContent = 'Hold'; } else { breathingPhase = 'exhale'; phaseTime = pattern.exhale; circle.className = 'breathing-circle exhale'; text.textContent = 'Exhale'; } } else if (breathingPhase === 'hold') { breathingPhase = 'exhale'; phaseTime = pattern.exhale; circle.className = 'breathing-circle exhale'; text.textContent = 'Exhale'; } else if (breathingPhase === 'exhale') { if (pattern.holdAfter) { breathingPhase = 'holdAfter'; phaseTime = pattern.holdAfter; text.textContent = 'Hold'; } else { cycleCount++; document.getElementById('cycleCount').textContent = cycleCount; breathingPhase = 'inhale'; phaseTime = pattern.inhale; circle.className = 'breathing-circle inhale'; text.textContent = 'Breathe In'; } } else if (breathingPhase === 'holdAfter') { cycleCount++; document.getElementById('cycleCount').textContent = cycleCount; breathingPhase = 'inhale'; phaseTime = pattern.inhale; circle.className = 'breathing-circle inhale'; text.textContent = 'Breathe In'; } } else { if (breathingPhase === 'inhale') { circle.className = 'breathing-circle inhale'; text.textContent = 'Breathe In\n' + phaseTime; } else if (breathingPhase === 'hold' || breathingPhase === 'holdAfter') { text.textContent = 'Hold\n' + phaseTime; } else { text.textContent = 'Exhale\n' + phaseTime; } } }, 1000); }
-        function stopBreathing() { clearInterval(breathingInterval); breathingInterval = null; stopCurrentSound(); document.getElementById('breathingCircle').className = 'breathing-circle'; document.getElementById('breathingText').textContent = 'Start'; document.getElementById('startBreathing').style.display = 'inline-block'; document.getElementById('stopBreathing').style.display = 'none'; saveSession(totalTime); }
-        let meditationTimer = null, meditationTimeLeft = 0, meditationTotalTime = 0, isPaused = false;
-        function renderMeditations(category = 'all', search = '') { const list = document.getElementById('meditationList'); let filtered = meditations; if (category !== 'all') filtered = filtered.filter(m => m.category === category); if (search) { const searchLower = search.toLowerCase(); filtered = filtered.filter(m => m.name.toLowerCase().includes(searchLower) || m.category.toLowerCase().includes(searchLower)); } list.innerHTML = filtered.map(m => '<div class="meditation-item" data-id="' + m.id + '" data-sound="' + m.sound + '"><span class="meditation-icon">' + m.icon + '</span><div class="meditation-info"><div class="meditation-name">' + m.name + '</div><div class="meditation-duration">' + m.duration + ' minutes • ' + m.category + '</div></div><div class="meditation-play">▶</div></div>').join(''); list.querySelectorAll('.meditation-item').forEach(item => { item.addEventListener('click', () => { const id = parseInt(item.dataset.id); const meditation = meditations.find(m => m.id === id); if (meditation) startMeditation(meditation); }); }); }
-        function startMeditation(meditation) { initAudio(); const player = document.getElementById('meditationPlayer'); document.getElementById('playerTitle').textContent = meditation.name; document.getElementById('playerEmoji').textContent = meditation.icon; meditationTotalTime = meditation.duration * 60; meditationTimeLeft = meditationTotalTime; document.getElementById('playerTimer').textContent = formatTime(meditationTimeLeft); document.getElementById('playerProgress').style.width = '0%'; createNoise(meditation.sound); isPaused = false; document.getElementById('pausePlayer').textContent = '⏸️ Pause'; player.classList.add('active'); meditationTimer = setInterval(() => { if (!isPaused) { meditationTimeLeft--; document.getElementById('playerTimer').textContent = formatTime(meditationTimeLeft); document.getElementById('playerProgress').style.width = ((meditationTotalTime - meditationTimeLeft) / meditationTotalTime * 100) + '%'; if (meditationTimeLeft <= 0) { endMeditation(); playCompletionSound(); } } }, 1000); }
-        function startCustomMeditation(minutes) { initAudio(); const player = document.getElementById('meditationPlayer'); document.getElementById('playerTitle').textContent = 'Silent Meditation'; document.getElementById('playerEmoji').textContent = '🧘'; meditationTotalTime = minutes * 60; meditationTimeLeft = meditationTotalTime; document.getElementById('playerTimer').textContent = formatTime(meditationTimeLeft); document.getElementById('playerProgress').style.width = '0%'; const selectedSound = document.querySelector('.sound-btn.active'); if (selectedSound) createNoise(selectedSound.dataset.sound); isPaused = false; document.getElementById('pausePlayer').textContent = '⏸️ Pause'; player.classList.add('active'); meditationTimer = setInterval(() => { if (!isPaused) { meditationTimeLeft--; document.getElementById('playerTimer').textContent = formatTime(meditationTimeLeft); document.getElementById('playerProgress').style.width = ((meditationTotalTime - meditationTimeLeft) / meditationTotalTime * 100) + '%'; if (meditationTimeLeft <= 0) { endMeditation(); playCompletionSound(); } } }, 1000); }
-        function pauseMeditation() { isPaused = !isPaused; document.getElementById('pausePlayer').textContent = isPaused ? '▶️ Resume' : '⏸️ Pause'; if (isPaused) stopCurrentSound(); else { const selectedSound = document.querySelector('.sound-btn.active'); if (selectedSound) createNoise(selectedSound.dataset.sound); } }
-        function endMeditation() { clearInterval(meditationTimer); meditationTimer = null; stopCurrentSound(); document.getElementById('meditationPlayer').classList.remove('active'); saveSession(meditationTotalTime - meditationTimeLeft); }
-        function playCompletionSound() { if (audioContext) { const osc = audioContext.createOscillator(); const tempGain = audioContext.createGain(); osc.frequency.value = 528; osc.type = 'sine'; tempGain.gain.setValueAtTime(0.3, audioContext.currentTime); tempGain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 3); osc.connect(tempGain); tempGain.connect(audioContext.destination); osc.start(); osc.stop(audioContext.currentTime + 3); } }
-        let selectedMood = null;
-        function saveMood() { if (!selectedMood) { alert('Please select a mood first!'); return; } const note = document.getElementById('moodNote').value; const entry = { mood: selectedMood.mood, emoji: selectedMood.emoji, note: note, timestamp: new Date().toISOString() }; let moodHistory = JSON.parse(localStorage.getItem('bondhuMoodHistory') || '[]'); moodHistory.unshift(entry); moodHistory = moodHistory.slice(0, 50); localStorage.setItem('bondhuMoodHistory', JSON.stringify(moodHistory)); document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('selected')); document.getElementById('moodNote').value = ''; selectedMood = null; renderMoodHistory(); updateStats(); alert('Mood saved! 💚'); }
-        function renderMoodHistory() { const container = document.getElementById('moodHistory'); const history = JSON.parse(localStorage.getItem('bondhuMoodHistory') || '[]'); if (history.length === 0) { container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">No mood entries yet. Start tracking above!</p>'; return; } container.innerHTML = history.slice(0, 10).map(entry => { const date = new Date(entry.timestamp); const dateStr = date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }); const timeStr = date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }); return '<div class="mood-entry"><div><span style="font-size: 24px;">' + entry.emoji + '</span><span style="margin-left: 8px; color: var(--text-muted);">' + (entry.note || '') + '</span></div><div style="color: var(--text-muted); font-size: 12px;">' + dateStr + ' ' + timeStr + '</div></div>'; }).join(''); }
-        function saveSession(seconds) { const sessions = JSON.parse(localStorage.getItem('bondhuSessions') || '[]'); sessions.push({ duration: seconds, timestamp: new Date().toISOString() }); localStorage.setItem('bondhuSessions', JSON.stringify(sessions)); updateStats(); }
-        function updateStats() { const sessions = JSON.parse(localStorage.getItem('bondhuSessions') || '[]'); const moods = JSON.parse(localStorage.getItem('bondhuMoodHistory') || '[]'); document.getElementById('totalSessions').textContent = sessions.length; document.getElementById('totalMinutes').textContent = Math.round(sessions.reduce((sum, s) => sum + s.duration, 0) / 60); let streak = 0; const sessionDates = [...new Set(sessions.map(s => new Date(s.timestamp).toDateString()))]; for (let i = 0; i < 365; i++) { const checkDate = new Date(); checkDate.setDate(checkDate.getDate() - i); if (sessionDates.includes(checkDate.toDateString())) streak++; else if (i > 0) break; } document.getElementById('currentStreak').textContent = streak; if (moods.length > 0) { const avgMood = moods.reduce((sum, m) => sum + parseInt(m.mood), 0) / moods.length; const moodEmojis = ['😢', '😔', '😐', '🙂', '😊', '😰', '😤', '😴', '🤗', '🌟']; document.getElementById('avgMood').textContent = moodEmojis[Math.round(avgMood) - 1] || '-'; } }
-        function formatTime(seconds) { const mins = Math.floor(seconds / 60); const secs = seconds % 60; return mins + ':' + secs.toString().padStart(2, '0'); }
-        document.querySelectorAll('.nav-item').forEach(item => { item.addEventListener('click', () => { const page = item.dataset.page; document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); item.classList.add('active'); document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById('page-' + page).classList.add('active'); }); });
-        document.querySelectorAll('.breathing-type-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.breathing-type-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); currentPattern = btn.dataset.type; }); });
-        document.querySelectorAll('.sound-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.sound-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); if (breathingInterval) createNoise(btn.dataset.sound); }); });
-        document.getElementById('volumeSlider').addEventListener('input', (e) => { setVolume(e.target.value); });
-        document.getElementById('playerVolume').addEventListener('input', (e) => { setVolume(e.target.value); });
-        document.getElementById('startBreathing').addEventListener('click', startBreathing);
-        document.getElementById('stopBreathing').addEventListener('click', stopBreathing);
-        document.querySelectorAll('.category-chip').forEach(chip => { chip.addEventListener('click', () => { document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active')); chip.classList.add('active'); renderMeditations(chip.dataset.category); }); });
-        document.getElementById('meditationSearch').addEventListener('input', (e) => { const activeCategory = document.querySelector('.category-chip.active').dataset.category; renderMeditations(activeCategory, e.target.value); });
-        let selectedMinutes = 10;
-        document.querySelectorAll('.timer-preset').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.timer-preset').forEach(b => b.classList.remove('active')); btn.classList.add('active'); selectedMinutes = parseInt(btn.dataset.minutes); }); });
-        document.getElementById('startCustomTimer').addEventListener('click', () => { startCustomMeditation(selectedMinutes); });
-        document.getElementById('closePlayer').addEventListener('click', endMeditation);
-        document.getElementById('pausePlayer').addEventListener('click', pauseMeditation);
-        document.getElementById('endPlayer').addEventListener('click', endMeditation);
-        document.querySelectorAll('.mood-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); selectedMood = { mood: btn.dataset.mood, emoji: btn.dataset.emoji }; }); });
-        document.getElementById('saveMood').addEventListener('click', saveMood);
-        document.addEventListener('DOMContentLoaded', () => { renderMeditations(); renderMoodHistory(); updateStats(); if (window.Telegram && window.Telegram.WebApp) { const tg = window.Telegram.WebApp; tg.ready(); tg.expand(); } });
+        const tg = window.Telegram?.WebApp;
+        if (tg) { tg.ready(); tg.expand(); const user = tg.initDataUnsafe?.user; if (user?.first_name) { document.querySelector('.greeting-text').textContent = `Hello, ${user.first_name}! 🙏`; } }
+        document.querySelectorAll('.nav-item').forEach(item => { item.addEventListener('click', () => showPage(item.dataset.page)); });
+        document.querySelectorAll('.feature-card[data-page]').forEach(card => { card.addEventListener('click', () => showPage(card.dataset.page)); });
+        function showPage(pageId) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.querySelector(`.nav-item[data-page="${pageId}"]`)?.classList.add('active'); document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(pageId)?.classList.add('active'); window.scrollTo(0, 0); }
+        document.querySelectorAll('.mood-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); handleMood(btn.dataset.mood); }); });
+        function handleMood(mood) { const responses = { great: "Wonderful! 😊 Keep spreading that positive energy!", good: "That's nice to hear! 🙂 Keep it up!", okay: "It's okay to feel neutral. How can I help today?", low: "I'm here for you 💚 Would you like a breathing exercise or to talk?", struggling: "I hear you 💚 You're not alone. Would you like to try a calming exercise or see support resources?" }; if (tg) tg.showAlert(responses[mood] || "Thank you for sharing 💚"); else alert(responses[mood] || "Thank you for sharing 💚"); if (mood === 'struggling') setTimeout(() => showPage('sos'), 1500); }
+        let breathingInterval = null; let currentTechnique = '478';
+        const techniques = { '478': { name: '4-7-8', pattern: [{ phase: 'Inhale', duration: 4, class: 'inhale' }, { phase: 'Hold', duration: 7, class: 'hold' }, { phase: 'Exhale', duration: 8, class: 'exhale' }]}, 'box': { name: 'Box', pattern: [{ phase: 'Inhale', duration: 4, class: 'inhale' }, { phase: 'Hold', duration: 4, class: 'hold' }, { phase: 'Exhale', duration: 4, class: 'exhale' }, { phase: 'Hold', duration: 4, class: 'hold' }]}, 'anulom': { name: 'Anulom Vilom', pattern: [{ phase: 'Inhale Left', duration: 4, class: 'inhale' }, { phase: 'Exhale Right', duration: 4, class: 'exhale' }, { phase: 'Inhale Right', duration: 4, class: 'inhale' }, { phase: 'Exhale Left', duration: 4, class: 'exhale' }]}, 'belly': { name: 'Belly', pattern: [{ phase: 'Inhale', duration: 5, class: 'inhale' }, { phase: 'Exhale', duration: 6, class: 'exhale' }]} };
+        function selectTechnique(el) { document.querySelectorAll('.technique-card').forEach(c => c.classList.remove('active')); el.classList.add('active'); currentTechnique = el.dataset.technique; }
+        function startBreathingExercise() { document.getElementById('startBreathing').style.display = 'none'; document.getElementById('stopBreathing').style.display = 'inline-flex'; const technique = techniques[currentTechnique]; let patternIndex = 0, count = 0; const circle = document.getElementById('breathingCircle'); const text = document.getElementById('breathingText'); const countEl = document.getElementById('breathingCount'); function tick() { const step = technique.pattern[patternIndex]; circle.className = 'breathing-circle ' + step.class; text.textContent = step.phase; countEl.textContent = count + 1; count++; if (count >= step.duration) { count = 0; patternIndex = (patternIndex + 1) % technique.pattern.length; } } tick(); breathingInterval = setInterval(tick, 1000); }
+        function stopBreathingExercise() { if (breathingInterval) { clearInterval(breathingInterval); breathingInterval = null; } document.getElementById('breathingCircle').className = 'breathing-circle'; document.getElementById('breathingText').textContent = 'Ready'; document.getElementById('breathingCount').textContent = '-'; document.getElementById('startBreathing').style.display = 'inline-flex'; document.getElementById('stopBreathing').style.display = 'none'; }
+        function searchYouTube(query) { window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, '_blank'); }
+        function makeCall(number) { window.location.href = `tel:${number}`; }
+        function openChat() { if (tg) tg.close(); else window.location.href = 'https://t.me/peacepal_bot'; }
+        const tips = [ "Take three deep breaths right now. Inhale peace, exhale tension. 🙏", "Drink a glass of water. Your body and mind will thank you. 💧", "Step outside for 5 minutes. Fresh air heals the soul. 🌿", "Send a kind message to someone you care about. 💚", "Your feelings are valid. It's okay to not be okay sometimes. 🤗", "Place your hand on your heart. Feel that? You're alive and that matters. ❤️", "Progress, not perfection. Small steps count. 🚶", "You've survived 100% of your worst days. You're stronger than you know. 💪" ];
+        document.getElementById('daily-tip').textContent = tips[Math.floor(Math.random() * tips.length)];
     </script>
 </body>
 </html>
