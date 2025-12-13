@@ -90,12 +90,83 @@
         .suggestion-chips { display: flex; flex-wrap: wrap; gap: 8px; }
         .suggestion-chip { background: rgba(45, 138, 123, 0.2); border-radius: 20px; padding: 8px 14px; font-size: 12px; cursor: pointer; transition: all 0.3s ease; }
         .suggestion-chip:hover { background: rgba(45, 138, 123, 0.4); }
+        
+        /* Floating Chat Button */
+        .chat-fab { position: fixed; bottom: 90px; right: 20px; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border: none; color: white; font-size: 28px; cursor: pointer; box-shadow: 0 4px 20px rgba(45, 138, 123, 0.5); z-index: 999; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; }
+        .chat-fab:hover { transform: scale(1.1); box-shadow: 0 6px 25px rgba(45, 138, 123, 0.7); }
+        .chat-fab.active { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        
+        /* Chat Modal */
+        .chat-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 2000; display: none; justify-content: center; align-items: flex-end; padding: 20px; }
+        .chat-modal.active { display: flex; animation: fadeIn 0.3s ease; }
+        .chat-container { width: 100%; max-width: 500px; height: 80vh; max-height: 600px; background: var(--bg-dark); border-radius: 20px 20px 0 0; display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(45, 138, 123, 0.3); }
+        .chat-header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
+        .chat-header-info { display: flex; align-items: center; gap: 12px; }
+        .chat-avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .chat-header-text h3 { font-size: 16px; font-weight: 600; }
+        .chat-header-text p { font-size: 11px; opacity: 0.8; }
+        .chat-close { background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 5px; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+        .message { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.5; animation: fadeIn 0.3s ease; }
+        .message.bot { background: var(--bg-card); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .message.user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .message.typing { background: var(--bg-card); align-self: flex-start; }
+        .typing-indicator { display: flex; gap: 4px; padding: 4px 0; }
+        .typing-indicator span { width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); animation: typing 1.4s infinite; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-8px); } }
+        .chat-input-container { padding: 12px 16px; background: var(--bg-card); border-top: 1px solid rgba(45, 138, 123, 0.2); display: flex; gap: 10px; align-items: center; }
+        .chat-input { flex: 1; background: var(--bg-dark); border: 1px solid rgba(45, 138, 123, 0.3); border-radius: 25px; padding: 12px 18px; color: var(--text-light); font-size: 14px; font-family: 'Poppins', sans-serif; outline: none; }
+        .chat-input:focus { border-color: var(--primary); }
+        .chat-input::placeholder { color: var(--text-muted); }
+        .chat-send { width: 44px; height: 44px; border-radius: 50%; background: var(--primary); border: none; color: white; font-size: 18px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; }
+        .chat-send:hover { background: var(--primary-light); transform: scale(1.05); }
+        .chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        /* Quick replies */
+        .quick-replies { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 16px; }
+        .quick-reply { background: rgba(45, 138, 123, 0.2); border: 1px solid var(--primary); border-radius: 20px; padding: 8px 14px; font-size: 12px; cursor: pointer; transition: all 0.3s ease; color: var(--text-light); }
+        .quick-reply:hover { background: var(--primary); color: white; }
+        
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
     </style>
 </head>
 <body>
+    <!-- Floating Chat Button -->
+    <button class="chat-fab" id="chatFab" onclick="toggleChat()">💬</button>
+    
+    <!-- Chat Modal -->
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <div class="chat-avatar">💚</div>
+                    <div class="chat-header-text">
+                        <h3>Bondhu</h3>
+                        <p>Your Wellness Friend • Online</p>
+                    </div>
+                </div>
+                <button class="chat-close" onclick="toggleChat()">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">Namaste! 🙏 I'm Bondhu, your wellness friend. How are you feeling today? I'm here to listen and support you. 💚</div>
+            </div>
+            <div class="quick-replies" id="quickReplies">
+                <span class="quick-reply" onclick="sendQuickReply('I need to talk')">I need to talk</span>
+                <span class="quick-reply" onclick="sendQuickReply('Guide me through breathing')">Breathing exercise</span>
+                <span class="quick-reply" onclick="sendQuickReply('I feel anxious')">Feeling anxious</span>
+                <span class="quick-reply" onclick="sendQuickReply('Help me relax')">Help me relax</span>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+                <button class="chat-send" id="sendBtn" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+    </div>
+
     <nav class="nav-container">
         <div class="nav">
             <div class="nav-item active" data-page="home"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
@@ -110,7 +181,7 @@
         <!-- HOME PAGE -->
         <div class="page active" id="home">
             <div class="header"><h1 class="header-title">Bondhu 💚</h1><p class="header-subtitle">Your Wellness Friend</p></div>
-            <div class="greeting"><p class="greeting-text">Hello, Friend! 🙏</p><p class="greeting-sub">How are you feeling today?</p></div>
+            <div class="greeting"><p class="greeting-text" id="greetingText">Hello, Friend! 🙏</p><p class="greeting-sub">How are you feeling today?</p></div>
             <div class="mood-grid">
                 <div class="mood-btn" data-mood="great"><span class="mood-emoji">😊</span><span class="mood-label">Great</span></div>
                 <div class="mood-btn" data-mood="good"><span class="mood-emoji">🙂</span><span class="mood-label">Good</span></div>
@@ -118,12 +189,12 @@
                 <div class="mood-btn" data-mood="low"><span class="mood-emoji">😔</span><span class="mood-label">Low</span></div>
                 <div class="mood-btn" data-mood="struggling"><span class="mood-emoji">😢</span><span class="mood-label">Hard</span></div>
             </div>
-            <div class="voice-banner"><span class="voice-icon">🎤</span><div class="voice-content"><h3>Voice Messages Enabled!</h3><p>Just speak to Bondhu in the chat - I'll understand and respond.</p></div></div>
+            <div class="voice-banner" onclick="toggleChat()"><span class="voice-icon">💬</span><div class="voice-content"><h3>Chat with Bondhu</h3><p>Talk to me anytime - I'm here to listen and support you.</p></div></div>
             <div class="feature-grid">
                 <div class="feature-card" data-page="breathe"><span class="feature-icon">🌬️</span><div class="feature-title">Breathing</div><div class="feature-desc">Guided exercises</div></div>
                 <div class="feature-card" data-page="meditate"><span class="feature-icon">🧘</span><div class="feature-title">Meditation</div><div class="feature-desc">Video guides</div></div>
                 <div class="feature-card" data-page="music"><span class="feature-icon">🎵</span><div class="feature-title">Music</div><div class="feature-desc">Relaxing sounds</div></div>
-                <div class="feature-card" onclick="openChat()"><span class="feature-icon">💬</span><div class="feature-title">Chat</div><div class="feature-desc">Talk to Bondhu</div></div>
+                <div class="feature-card" onclick="toggleChat()"><span class="feature-icon">💬</span><div class="feature-title">Chat</div><div class="feature-desc">Talk to Bondhu</div></div>
             </div>
             <div class="section-title">💡 Daily Wellness Tip</div>
             <div class="card"><p id="daily-tip" style="font-size: 14px; line-height: 1.6;">Take three deep breaths right now. Inhale peace, exhale tension. 🙏</p></div>
@@ -227,27 +298,235 @@
                 <div class="helpline-card" onclick="makeCall('02225521111')"><div class="helpline-icon">🤝</div><div class="helpline-info"><div class="helpline-name">iCall</div><div class="helpline-number">022-2552-1111</div><div class="helpline-hours">Mon-Sat • 8am-10pm</div></div><button class="call-btn">Call</button></div>
                 <div class="helpline-card" onclick="makeCall('9152987821')"><div class="helpline-icon">💜</div><div class="helpline-info"><div class="helpline-name">AASRA</div><div class="helpline-number">9152987821</div><div class="helpline-hours">24/7</div></div><button class="call-btn">Call</button></div>
             </div>
-            <div class="card" style="margin-top: 20px; text-align: center;"><p style="font-size: 14px; margin-bottom: 12px;">You can also talk to me anytime</p><button class="btn btn-primary" onclick="openChat()">💬 Chat with Bondhu</button></div>
+            <div class="card" style="margin-top: 20px; text-align: center;"><p style="font-size: 14px; margin-bottom: 12px;">You can also talk to me anytime</p><button class="btn btn-primary" onclick="toggleChat()">💬 Chat with Bondhu</button></div>
         </div>
     </div>
 
     <script>
+        // Telegram WebApp init
         const tg = window.Telegram?.WebApp;
-        if (tg) { tg.ready(); tg.expand(); const user = tg.initDataUnsafe?.user; if (user?.first_name) { document.querySelector('.greeting-text').textContent = `Hello, ${user.first_name}! 🙏`; } }
+        let userName = 'Friend';
+        if (tg) { 
+            tg.ready(); 
+            tg.expand(); 
+            const user = tg.initDataUnsafe?.user; 
+            if (user?.first_name) { 
+                userName = user.first_name;
+                document.getElementById('greetingText').textContent = `Hello, ${userName}! 🙏`; 
+            } 
+        }
+        
+        // Chat functionality
+        const GEMINI_API_KEY = 'AIzaSyDa5J4mp1PG1FtfxUXaFdtpw-RHYxwfhmQ';
+        let chatHistory = [];
+        
+        function toggleChat() {
+            const modal = document.getElementById('chatModal');
+            const fab = document.getElementById('chatFab');
+            modal.classList.toggle('active');
+            fab.classList.toggle('active');
+            fab.textContent = modal.classList.contains('active') ? '✕' : '💬';
+            if (modal.classList.contains('active')) {
+                document.getElementById('chatInput').focus();
+            }
+        }
+        
+        function handleKeyPress(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+        
+        function sendQuickReply(text) {
+            document.getElementById('chatInput').value = text;
+            sendMessage();
+            document.getElementById('quickReplies').style.display = 'none';
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Show typing indicator
+            const typingId = showTyping();
+            
+            try {
+                const response = await callGeminiAPI(message);
+                removeTyping(typingId);
+                addMessage(response, 'bot');
+            } catch (error) {
+                removeTyping(typingId);
+                addMessage("I'm having trouble connecting. Please try again or reach out to the helplines if you need immediate support. 💚", 'bot');
+            }
+        }
+        
+        async function callGeminiAPI(userMessage) {
+            chatHistory.push({ role: 'user', parts: [{ text: userMessage }] });
+            
+            const systemPrompt = `You are Bondhu (বন্ধু), a warm, empathetic wellness companion. You support users with:
+- Breathing exercises (4-7-8: Inhale 4s, Hold 7s, Exhale 8s)
+- Emotional support and active listening
+- Gentle guidance for anxiety and stress
+- Crisis resources: KIRAN 1800-599-0019 (24/7 free)
+
+Guidelines:
+- Keep responses concise (2-3 sentences max)
+- Use warm, supportive tone
+- Use occasional emojis 💚🙏
+- If user mentions suicide/self-harm, immediately provide KIRAN number
+- Respond in same language as user (Hindi/Bengali/English)
+- Name of user: ${userName}`;
+
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [
+                        { role: 'user', parts: [{ text: systemPrompt }] },
+                        { role: 'model', parts: [{ text: 'I understand. I am Bondhu, ready to support with warmth and care. 💚' }] },
+                        ...chatHistory
+                    ],
+                    generationConfig: { temperature: 0.7, maxOutputTokens: 200 }
+                })
+            });
+            
+            const data = await response.json();
+            const botResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm here for you. How can I help? 💚";
+            chatHistory.push({ role: 'model', parts: [{ text: botResponse }] });
+            
+            // Keep history manageable
+            if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+            
+            return botResponse;
+        }
+        
+        function addMessage(text, type) {
+            const container = document.getElementById('chatMessages');
+            const msg = document.createElement('div');
+            msg.className = `message ${type}`;
+            msg.textContent = text;
+            container.appendChild(msg);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        function showTyping() {
+            const container = document.getElementById('chatMessages');
+            const typing = document.createElement('div');
+            typing.className = 'message typing';
+            typing.id = 'typing-' + Date.now();
+            typing.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+            container.appendChild(typing);
+            container.scrollTop = container.scrollHeight;
+            return typing.id;
+        }
+        
+        function removeTyping(id) {
+            const typing = document.getElementById(id);
+            if (typing) typing.remove();
+        }
+
+        // Navigation
         document.querySelectorAll('.nav-item').forEach(item => { item.addEventListener('click', () => showPage(item.dataset.page)); });
         document.querySelectorAll('.feature-card[data-page]').forEach(card => { card.addEventListener('click', () => showPage(card.dataset.page)); });
-        function showPage(pageId) { document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.querySelector(`.nav-item[data-page="${pageId}"]`)?.classList.add('active'); document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(pageId)?.classList.add('active'); window.scrollTo(0, 0); }
-        document.querySelectorAll('.mood-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); handleMood(btn.dataset.mood); }); });
-        function handleMood(mood) { const responses = { great: "Wonderful! 😊 Keep spreading that positive energy!", good: "That's nice to hear! 🙂 Keep it up!", okay: "It's okay to feel neutral. How can I help today?", low: "I'm here for you 💚 Would you like a breathing exercise or to talk?", struggling: "I hear you 💚 You're not alone. Would you like to try a calming exercise or see support resources?" }; if (tg) tg.showAlert(responses[mood] || "Thank you for sharing 💚"); else alert(responses[mood] || "Thank you for sharing 💚"); if (mood === 'struggling') setTimeout(() => showPage('sos'), 1500); }
-        let breathingInterval = null; let currentTechnique = '478';
-        const techniques = { '478': { name: '4-7-8', pattern: [{ phase: 'Inhale', duration: 4, class: 'inhale' }, { phase: 'Hold', duration: 7, class: 'hold' }, { phase: 'Exhale', duration: 8, class: 'exhale' }]}, 'box': { name: 'Box', pattern: [{ phase: 'Inhale', duration: 4, class: 'inhale' }, { phase: 'Hold', duration: 4, class: 'hold' }, { phase: 'Exhale', duration: 4, class: 'exhale' }, { phase: 'Hold', duration: 4, class: 'hold' }]}, 'anulom': { name: 'Anulom Vilom', pattern: [{ phase: 'Inhale Left', duration: 4, class: 'inhale' }, { phase: 'Exhale Right', duration: 4, class: 'exhale' }, { phase: 'Inhale Right', duration: 4, class: 'inhale' }, { phase: 'Exhale Left', duration: 4, class: 'exhale' }]}, 'belly': { name: 'Belly', pattern: [{ phase: 'Inhale', duration: 5, class: 'inhale' }, { phase: 'Exhale', duration: 6, class: 'exhale' }]} };
-        function selectTechnique(el) { document.querySelectorAll('.technique-card').forEach(c => c.classList.remove('active')); el.classList.add('active'); currentTechnique = el.dataset.technique; }
-        function startBreathingExercise() { document.getElementById('startBreathing').style.display = 'none'; document.getElementById('stopBreathing').style.display = 'inline-flex'; const technique = techniques[currentTechnique]; let patternIndex = 0, count = 0; const circle = document.getElementById('breathingCircle'); const text = document.getElementById('breathingText'); const countEl = document.getElementById('breathingCount'); function tick() { const step = technique.pattern[patternIndex]; circle.className = 'breathing-circle ' + step.class; text.textContent = step.phase; countEl.textContent = count + 1; count++; if (count >= step.duration) { count = 0; patternIndex = (patternIndex + 1) % technique.pattern.length; } } tick(); breathingInterval = setInterval(tick, 1000); }
-        function stopBreathingExercise() { if (breathingInterval) { clearInterval(breathingInterval); breathingInterval = null; } document.getElementById('breathingCircle').className = 'breathing-circle'; document.getElementById('breathingText').textContent = 'Ready'; document.getElementById('breathingCount').textContent = '-'; document.getElementById('startBreathing').style.display = 'inline-flex'; document.getElementById('stopBreathing').style.display = 'none'; }
+        
+        function showPage(pageId) { 
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
+            document.querySelector(`.nav-item[data-page="${pageId}"]`)?.classList.add('active'); 
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
+            document.getElementById(pageId)?.classList.add('active'); 
+            window.scrollTo(0, 0); 
+        }
+        
+        // Mood handling
+        document.querySelectorAll('.mood-btn').forEach(btn => { 
+            btn.addEventListener('click', () => { 
+                document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected')); 
+                btn.classList.add('selected'); 
+                handleMood(btn.dataset.mood); 
+            }); 
+        });
+        
+        function handleMood(mood) { 
+            const responses = { 
+                great: "Wonderful! 😊 Keep spreading that positive energy!", 
+                good: "That's nice to hear! 🙂 Keep it up!", 
+                okay: "It's okay to feel neutral. How can I help today?", 
+                low: "I'm here for you 💚 Would you like a breathing exercise or to talk?", 
+                struggling: "I hear you 💚 You're not alone. Would you like to try a calming exercise or see support resources?" 
+            }; 
+            if (tg) tg.showAlert(responses[mood] || "Thank you for sharing 💚"); 
+            else alert(responses[mood] || "Thank you for sharing 💚"); 
+            if (mood === 'struggling') setTimeout(() => showPage('sos'), 1500); 
+        }
+        
+        // Breathing exercise
+        let breathingInterval = null; 
+        let currentTechnique = '478';
+        const techniques = { 
+            '478': { name: '4-7-8', pattern: [{ phase: 'Inhale', duration: 4, class: 'inhale' }, { phase: 'Hold', duration: 7, class: 'hold' }, { phase: 'Exhale', duration: 8, class: 'exhale' }]}, 
+            'box': { name: 'Box', pattern: [{ phase: 'Inhale', duration: 4, class: 'inhale' }, { phase: 'Hold', duration: 4, class: 'hold' }, { phase: 'Exhale', duration: 4, class: 'exhale' }, { phase: 'Hold', duration: 4, class: 'hold' }]}, 
+            'anulom': { name: 'Anulom Vilom', pattern: [{ phase: 'Inhale Left', duration: 4, class: 'inhale' }, { phase: 'Exhale Right', duration: 4, class: 'exhale' }, { phase: 'Inhale Right', duration: 4, class: 'inhale' }, { phase: 'Exhale Left', duration: 4, class: 'exhale' }]}, 
+            'belly': { name: 'Belly', pattern: [{ phase: 'Inhale', duration: 5, class: 'inhale' }, { phase: 'Exhale', duration: 6, class: 'exhale' }]} 
+        };
+        
+        function selectTechnique(el) { 
+            document.querySelectorAll('.technique-card').forEach(c => c.classList.remove('active')); 
+            el.classList.add('active'); 
+            currentTechnique = el.dataset.technique; 
+        }
+        
+        function startBreathingExercise() { 
+            document.getElementById('startBreathing').style.display = 'none'; 
+            document.getElementById('stopBreathing').style.display = 'inline-flex'; 
+            const technique = techniques[currentTechnique]; 
+            let patternIndex = 0, count = 0; 
+            const circle = document.getElementById('breathingCircle'); 
+            const text = document.getElementById('breathingText'); 
+            const countEl = document.getElementById('breathingCount'); 
+            function tick() { 
+                const step = technique.pattern[patternIndex]; 
+                circle.className = 'breathing-circle ' + step.class; 
+                text.textContent = step.phase; 
+                countEl.textContent = count + 1; 
+                count++; 
+                if (count >= step.duration) { 
+                    count = 0; 
+                    patternIndex = (patternIndex + 1) % technique.pattern.length; 
+                } 
+            } 
+            tick(); 
+            breathingInterval = setInterval(tick, 1000); 
+        }
+        
+        function stopBreathingExercise() { 
+            if (breathingInterval) { clearInterval(breathingInterval); breathingInterval = null; } 
+            document.getElementById('breathingCircle').className = 'breathing-circle'; 
+            document.getElementById('breathingText').textContent = 'Ready'; 
+            document.getElementById('breathingCount').textContent = '-'; 
+            document.getElementById('startBreathing').style.display = 'inline-flex'; 
+            document.getElementById('stopBreathing').style.display = 'none'; 
+        }
+        
         function searchYouTube(query) { window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, '_blank'); }
         function makeCall(number) { window.location.href = `tel:${number}`; }
-        function openChat() { if (tg) tg.close(); else window.location.href = 'https://t.me/peacepal_bot'; }
-        const tips = [ "Take three deep breaths right now. Inhale peace, exhale tension. 🙏", "Drink a glass of water. Your body and mind will thank you. 💧", "Step outside for 5 minutes. Fresh air heals the soul. 🌿", "Send a kind message to someone you care about. 💚", "Your feelings are valid. It's okay to not be okay sometimes. 🤗", "Place your hand on your heart. Feel that? You're alive and that matters. ❤️", "Progress, not perfection. Small steps count. 🚶", "You've survived 100% of your worst days. You're stronger than you know. 💪" ];
+        
+        // Daily tips
+        const tips = [ 
+            "Take three deep breaths right now. Inhale peace, exhale tension. 🙏", 
+            "Drink a glass of water. Your body and mind will thank you. 💧", 
+            "Step outside for 5 minutes. Fresh air heals the soul. 🌿", 
+            "Send a kind message to someone you care about. 💚", 
+            "Your feelings are valid. It's okay to not be okay sometimes. 🤗", 
+            "Place your hand on your heart. Feel that? You're alive and that matters. ❤️", 
+            "Progress, not perfection. Small steps count. 🚶", 
+            "You've survived 100% of your worst days. You're stronger than you know. 💪" 
+        ];
         document.getElementById('daily-tip').textContent = tips[Math.floor(Math.random() * tips.length)];
     </script>
 </body>
