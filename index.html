@@ -316,8 +316,7 @@
             } 
         }
         
-        // Chat functionality
-        const GEMINI_API_KEY = 'AIzaSyDa5J4mp1PG1FtfxUXaFdtpw-RHYxwfhmQ';
+        // Chat functionality - API key secured on server
         let chatHistory = [];
         
         function toggleChat() {
@@ -367,37 +366,22 @@
         }
         
         async function callGeminiAPI(userMessage) {
-            chatHistory.push({ role: 'user', parts: [{ text: userMessage }] });
-            
-            const systemPrompt = `You are Bondhu (বন্ধু), a warm, empathetic wellness companion. You support users with:
-- Breathing exercises (4-7-8: Inhale 4s, Hold 7s, Exhale 8s)
-- Emotional support and active listening
-- Gentle guidance for anxiety and stress
-- Crisis resources: KIRAN 1800-599-0019 (24/7 free)
-
-Guidelines:
-- Keep responses concise (2-3 sentences max)
-- Use warm, supportive tone
-- Use occasional emojis 💚🙏
-- If user mentions suicide/self-harm, immediately provide KIRAN number
-- Respond in same language as user (Hindi/Bengali/English)
-- Name of user: ${userName}`;
-
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            // Call server-side API to protect API key
+            const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [
-                        { role: 'user', parts: [{ text: systemPrompt }] },
-                        { role: 'model', parts: [{ text: 'I understand. I am Bondhu, ready to support with warmth and care. 💚' }] },
-                        ...chatHistory
-                    ],
-                    generationConfig: { temperature: 0.7, maxOutputTokens: 200 }
+                    message: userMessage,
+                    userName: userName,
+                    chatHistory: chatHistory
                 })
             });
             
             const data = await response.json();
-            const botResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm here for you. How can I help? 💚";
+            const botResponse = data.response || "I'm here for you. How can I help? 💚";
+            
+            // Update local chat history
+            chatHistory.push({ role: 'user', parts: [{ text: userMessage }] });
             chatHistory.push({ role: 'model', parts: [{ text: botResponse }] });
             
             // Keep history manageable
